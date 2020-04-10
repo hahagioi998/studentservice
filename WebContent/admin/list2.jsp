@@ -1,0 +1,123 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8" import="java.util.*" import="swu.zhj.model.*" import="swu.zhj.service.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+ <%
+    int id=(Integer)session.getAttribute("id");
+    session.setAttribute("id", id);
+    List<Bumen_baoming> bumen_baoming_list=new ArrayList<Bumen_baoming>();
+    bumen_baoming_list=(ArrayList<Bumen_baoming>)request.getAttribute("bumen_baoming_list");
+    %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>bootstrapTable</title>
+<!-- 必要css包 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/admin/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/admin/css/bootstrap-theme.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    
+    <div class="container-fluid">
+        <h2>新生报名情况</h2>
+		<div class="row-fluid">
+			<div class="span12">
+				<form class="form-search" action="${pageContext.request.contextPath}/Search?action=bumen_baoming" method="post">
+					<input class="input-medium search-query" type="text" name="search"/>
+					<button type="submit" class="btn btn-danger" >查找</button>
+				</form>
+				<h3>按填写条件查询</h3>
+			    <form action="${pageContext.request.contextPath}/XiangSearch?action=bumen_baoming" method="post">
+			             第一志愿：<input name="first" class="" placeholder="如：部门二" maxlength="20" type="text" >
+			                     第二志愿：  <input name="two" class="" placeholder="如部门三" maxlength="20" type="text" >
+			                   是否服从：    <input name="tiao" class="" placeholder="如：是" maxlength="20" type="text" >
+			            <input class="" type="submit" value="查找">
+			    </form>
+			    <center><a id="qunfa" style="display:block;width:80px;height:20px;background-color: #ccc;margin:20px;border-radius: 2px;">群发消息</a></center>
+				<table class="table">
+					<thead>
+						<tr> 
+						    <td>  <input type="checkbox" id="checkAll" onclick="checkAll()"/>全选/全不选</td>
+							<th>编号</th>
+							<th>姓名</th>
+							<th>专业</th>
+							<th>班级</th>
+							<th>第一志愿</th>
+							<th>第二志愿</th>
+							<th>是否服从调剂</th>
+							<th>电话</th>
+							<th>qq</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					<form action="${pageContext.request.contextPath}/Send?action=bumenbaoming" method="post">
+					   <div id="qunfa_content" style="background-color:#ccc;position:fixed;top:100px;right:35%;width:520px;height:280px;display:none;padding:10px;">
+			
+					    选择方式：<input name="method" type="radio" checked="checked" value="zhannei"/>站内方式 
+                        <input name="method" type="radio" value="qq"/>qq邮件
+                        <br>
+                        <input type="text" style="width:500px;height:200px;" placeholder="内容......" name="content">
+                         <a id="close_qunfa" style="float:right;display:block;background-color: #fff;width:44px;height:26px;padding:1px 6px;border-width:2px;;border-radius: 3px;cursor: pointer;"> 取消</a>
+                        <button type="submit">发表</button>
+                       </div>
+					  <%if(!bumen_baoming_list.isEmpty()){
+	    	             for(Bumen_baoming map:bumen_baoming_list){ %>
+							<tr>
+				                <td><input type="checkbox" name="tongzhi" value="<%=map.getStudent_id() %>"></td>
+								<td><%=map.getId() %></td>
+								<%int student_id=map.getStudent_id();
+								Studentusers user=TiebaService.chauserStudentById(student_id);	%> 
+								<td><%=user.getName() %></td>
+								<td><%=user.getZhuanye() %></td>
+								<td><%=user.getCla() %></td>
+								<td><%=map.getFirst() %></td>
+								<td><%=map.getTwo() %></td>
+								<td><%=map.getTiao() %></td>
+								<td><%=user.getPhone() %></td>
+								<td><%=user.getQq() %></td>
+								<td><a href="${pageContext.request.contextPath}/Addbumenuser?student_id=<%=user.getId() %>">同意加入</a>
+								</td>
+							</tr>
+							<%}} %>
+							<script>
+								  document.getElementById('qunfa').onclick = function() {
+									 document.getElementById('qunfa_content').style.display="block";
+								  };
+								  document.getElementById('close_qunfa').onclick = function() {
+										 document.getElementById('qunfa_content').style.display="none";
+									  };
+							</script>
+						</form>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+	<script>
+           document.getElementById('checkAll').onclick=function(){
+        	   var checkAllEle=document.getElementById('checkAll');
+        	   var checkOnes=document.getElementsByName('tongzhi');
+        	
+        	   if(checkAllEle.checked==true){
+        		   for(var i=0;i<checkOnes.length;i++){
+        			   checkOnes[i].checked=true;
+        		   }
+        	   }else{
+        		   for(var i=0;i<checkOnes.length;i++){
+        			   checkOnes[i].checked=false;
+        		   }
+        	   }
+           }
+</script>
+</body>
+</html>

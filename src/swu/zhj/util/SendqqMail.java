@@ -21,43 +21,43 @@ public class SendqqMail {
         Properties props = new Properties();
         props.setProperty("mail.host", "smtp.qq.com");
         props.setProperty("mail.smtp.auth", "true");
-        //QQÓÊÏäµÄSSL¼ÓÃÜ¡£
+        //QQé‚®ç®±çš„SSLåŠ å¯†ã€‚
         MailSSLSocketFactory sf = new MailSSLSocketFactory();
         sf.setTrustAllHosts(true);
         props.put("mail.smtp.ssl.enable", "true");
         props.put("mail.smtp.ssl.socketFactory", sf);
-        //authenticator²ÎÊı£¬µÇÂ¼×Ô¼ºµÄÓÊÏäÕÊºÅÃÜÂë£¬
+        //authenticatorå‚æ•°ï¼Œç™»å½•è‡ªå·±çš„é‚®ç®±å¸å·å¯†ç ï¼Œ
         Authenticator authenticator = new Authenticator() {
             @Override
             public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("1640085377@qq.com","rkqzdwcdqjoncjhf");
+                return new PasswordAuthentication("ä½ çš„qq@qq.com","ä½ çš„");
             }
         };        
         Session session = Session.getDefaultInstance(props, authenticator);                     
-        //2¡¢·¢ËÍµÄÄÚÈİ¶ÔÏóMesage
+        //2ã€å‘é€çš„å†…å®¹å¯¹è±¡Mesage
         Message message = new MimeMessage(session);
-        //2.1¡¢·¢¼şÈËÊÇË­
-        message.setFrom(new InternetAddress("1640085377@qq.com"));
-        // 2.2  , to:ÊÕ¼şÈË ; cc:³­ËÍ ; bcc :°µËÍ.
+        //2.1ã€å‘ä»¶äººæ˜¯è°
+        message.setFrom(new InternetAddress("ä½ çš„qq@qq.com"));
+        // 2.2  , to:æ”¶ä»¶äºº ; cc:æŠ„é€ ; bcc :æš—é€.
         /**
-         * ÊÕ¼şÈËÊÇË­£¿
-         *         µÚÒ»¸ö²ÎÊı£º
-         *             RecipientType.TO    ´ú±íÊÕ¼şÈË 
-         *             RecipientType.CC    ³­ËÍ
-         *             RecipientType.BCC    °µËÍ
-         *         ±ÈÈçAÒª¸øB·¢ÓÊ¼ş£¬µ«ÊÇA¾õµÃÓĞ±ØÒª¸øÒªÈÃCÒ²¿´¿´ÆäÄÚÈİ£¬¾ÍÔÚ¸øB·¢ÓÊ¼şÊ±£¬
-         *         ½«ÓÊ¼şÄÚÈİ³­ËÍ¸øC£¬ÄÇÃ´CÒ²ÄÜ¿´µ½ÆäÄÚÈİÁË£¬µ«ÊÇBÒ²ÄÜÖªµÀA¸øC³­ËÍ¹ı¸Ã·âÓÊ¼ş
-         *         ¶øÈç¹ûÊÇ°µËÍ(ÃÜËÍ)¸øCµÄ»°£¬ÄÇÃ´B¾Í²»ÖªµÀA¸øC·¢ËÍ¹ı¸Ã·âÓÊ¼ş¡£
-         *     µÚ¶ş¸ö²ÎÊı
-         *         ÊÕ¼şÈËµÄµØÖ·£¬»òÕßÊÇÒ»¸öAddress[]£¬ÓÃÀ´×°³­ËÍ»òÕß°µËÍÈËµÄÃûµ¥¡£»òÕßÓÃÀ´Èº·¢¡£
+         * æ”¶ä»¶äººæ˜¯è°ï¼Ÿ
+         *         ç¬¬ä¸€ä¸ªå‚æ•°ï¼š
+         *             RecipientType.TO    ä»£è¡¨æ”¶ä»¶äºº 
+         *             RecipientType.CC    æŠ„é€
+         *             RecipientType.BCC    æš—é€
+         *         æ¯”å¦‚Aè¦ç»™Bå‘é‚®ä»¶ï¼Œä½†æ˜¯Aè§‰å¾—æœ‰å¿…è¦ç»™è¦è®©Cä¹Ÿçœ‹çœ‹å…¶å†…å®¹ï¼Œå°±åœ¨ç»™Bå‘é‚®ä»¶æ—¶ï¼Œ
+         *         å°†é‚®ä»¶å†…å®¹æŠ„é€ç»™Cï¼Œé‚£ä¹ˆCä¹Ÿèƒ½çœ‹åˆ°å…¶å†…å®¹äº†ï¼Œä½†æ˜¯Bä¹Ÿèƒ½çŸ¥é“Aç»™CæŠ„é€è¿‡è¯¥å°é‚®ä»¶
+         *         è€Œå¦‚æœæ˜¯æš—é€(å¯†é€)ç»™Cçš„è¯ï¼Œé‚£ä¹ˆBå°±ä¸çŸ¥é“Aç»™Cå‘é€è¿‡è¯¥å°é‚®ä»¶ã€‚
+         *     ç¬¬äºŒä¸ªå‚æ•°
+         *         æ”¶ä»¶äººçš„åœ°å€ï¼Œæˆ–è€…æ˜¯ä¸€ä¸ªAddress[]ï¼Œç”¨æ¥è£…æŠ„é€æˆ–è€…æš—é€äººçš„åå•ã€‚æˆ–è€…ç”¨æ¥ç¾¤å‘ã€‚
          */
         message.setRecipient(RecipientType.TO, new InternetAddress(people));
-        // 2.3 Ö÷Ìâ£¨±êÌâ£©
+        // 2.3 ä¸»é¢˜ï¼ˆæ ‡é¢˜ï¼‰
         message.setSubject(title);
-        // 2.4 ÕıÎÄ
+        // 2.4 æ­£æ–‡
         String str =password;
         message.setContent(str, "text/html;charset=UTF-8");
-        //3¡¢·¢ËÍ
+        //3ã€å‘é€
         Transport.send(message);
     }
 }
